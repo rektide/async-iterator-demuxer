@@ -7,7 +7,7 @@ import ExtensibleAsyncGeneratorFunction from "extensible-function/async-generato
 */
 export class AsyncIteratorDemuxer extends ExtensibleAsyncGeneratorFunction{
 	constructor( source){
-		super(this[Symbol.asyncIterator].bind(this))
+		super(this[Symbol.asyncIterator])
 		this.source= source
 		Object.defineProperties( this, {
 			_next: {
@@ -22,10 +22,17 @@ export class AsyncIteratorDemuxer extends ExtensibleAsyncGeneratorFunction{
 	}
 	/**
 	* Read from the source, passing through values.
-	* Only one copy of this ought be run
 	* @private
 	*/
-	async * _reader(){
+	async *[Symbol.asyncIterator](){
+		if( this[Symbol.asyncIterator]=== this.copy){
+			// original function called, but iteration was already begun
+			// return a new copy
+			return yield* this._copy()
+		}
+		// from now on, anyone iterating gets a copy
+		this[Symbol.asyncIterator]= this._copy
+
 		var
 		  iterator= this.source[Symbol.asyncIterator](),
 		  done= false,
@@ -33,7 +40,7 @@ export class AsyncIteratorDemuxer extends ExtensibleAsyncGeneratorFunction{
 		try{
 			while( !done){
 				var
-				  cur= this._next
+				  cur= this._next,
 				  next= await iterator.next()
 				value= next.value
 				done= next.done
@@ -73,12 +80,6 @@ export class AsyncIteratorDemuxer extends ExtensibleAsyncGeneratorFunction{
 				return await this._done.promise
 			}
 		}
-	}
-	/**
-	* Directly iterating this class will spawn a new async-generator
-	*/
-	async * [Symbol.asyncIterator](){
-		return this._next? this._copy(): this._reader()
 	}
 }
 export default AsyncIteratorDemuxer
