@@ -1,0 +1,33 @@
+{
+	"name": "async-iterator-demuxer",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://archive.voodoowarez.com/async-iterator-demuxer"
+	},
+	"keywords": [],
+	"author": "rektide de la faye",
+	"license": "MIT",
+	"module": "async-iterator-demuxer.js",
+	"esmodule": true,
+	"@std/esm": {
+		"mode": "all",
+		"cjs": {
+			"namedExports": true
+		}
+	},
+	"dependencies": {
+		"extensible-function": "^1.1.1",
+		"next-tick": "^1.0.0",
+		"p-defer": "^1.0.0",
+		"p-immediate": "^2.1.0"
+	},
+	"devDependencies": {
+		"@std/esm": "^0.25.2"
+	}
+}
