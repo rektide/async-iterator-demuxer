@@ -1,7 +1,7 @@
 {
 	"name": "async-iterator-demuxer",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Create multiple async iterators of a single async-iterator/iterable.",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
 		"type": "git",
 		"url": "https://archive.voodoowarez.com/async-iterator-demuxer"
 	},
-	"keywords": [],
+	"keywords": ["async-iterator", "async-iteration", "demultiplexer", "demultiplex", "demux", "spmc"],
 	"author": "rektide de la faye",
 	"license": "MIT",
 	"module": "async-iterator-demuxer.js",
@@ -22,10 +22,7 @@
 		}
 	},
 	"dependencies": {
-		"extensible-function": "^1.1.1",
-		"next-tick": "^1.0.0",
-		"p-defer": "^1.0.0",
-		"p-immediate": "^2.1.0"
+		"p-defer": "^1.0.0"
 	},
 	"devDependencies": {
 		"@std/esm": "^0.25.2"

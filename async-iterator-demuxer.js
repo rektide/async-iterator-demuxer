@@ -1,13 +1,10 @@
-import Immediate from "p-immediate"
 import Defer from "p-defer"
-import ExtensibleAsyncGeneratorFunction from "extensible-function/async-generator.js"
 
 /**
 * Create multiple asyncIterators from a single asyncIterator.
 */
-export class AsyncIteratorDemuxer extends ExtensibleAsyncGeneratorFunction{
+export class AsyncIteratorDemuxer{
 	constructor( source){
-		super(this[Symbol.asyncIterator])
 		this.source= source
 		Object.defineProperties( this, {
 			_next: {
@@ -25,7 +22,7 @@ export class AsyncIteratorDemuxer extends ExtensibleAsyncGeneratorFunction{
 	* @private
 	*/
 	async *[Symbol.asyncIterator](){
-		if( this[Symbol.asyncIterator]=== this.copy){
+		if( this[Symbol.asyncIterator]=== this._copy){
 			// original function called, but iteration was already begun
 			// return a new copy
 			return yield* this._copy()
@@ -34,9 +31,17 @@ export class AsyncIteratorDemuxer extends ExtensibleAsyncGeneratorFunction{
 		this[Symbol.asyncIterator]= this._copy
 
 		var
-		  iterator= this.source[Symbol.asyncIterator](),
+		  iterator= this.source,
 		  done= false,
 		  value
+		if( typeof iterator=== "function"){
+			// an asyncc generator was passed in
+			iterator= iterator()
+		}
+		if( !iterator.next&& iterator[Symbol.asyncIterator]){
+			// an iterable was passed in
+			iterator= iterator[Symbol.asyncIterator]()
+		}
 		try{
 			while( !done){
 				var
